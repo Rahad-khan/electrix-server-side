@@ -79,6 +79,12 @@ async function run() {
             const result = await purchaseCollection.find(query).toArray();
             res.send(result);
         });
+        app.delete("/purchase/:id", jwtVerify, async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+            const result = await purchaseCollection.deleteOne(filter);
+            res.send(result);
+        });
     }
     finally {
         // console.log("object");
