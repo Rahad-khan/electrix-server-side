@@ -12,7 +12,20 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 app.use(cors());
 app.use(express.json());
 
-
+const jwtVerify = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).send({ mesaage: 'Unauthorized User' })
+    }
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, process.env.ACCESS_SECRET_TOKEN, (err, decode) => {
+        if (err) {
+            return res.status(403).send({ mesaage: 'Forbidden Access' })
+        }
+        req.decode = decode;
+        next();
+    })
+}
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@toolkits.jrid37h.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
@@ -25,6 +38,7 @@ async function run() {
     try {
         await client.connect();
         const productCollection = client.db("toolkit").collection("products");
+        const purchaseCollection = client.db("toolkit").collection("userPurchase");
         const userCollection = client.db("toolkit").collection("users");
 
         app.put('/user/:email', async (req, res) => {
@@ -36,12 +50,14 @@ async function run() {
                 $set: user,
             };
             const result = await userCollection.updateOne(filter, updateDoc, options);
-            const accessToken = jwt.sign(user, process.env.ACCESS_SECRET_TOKEN);
+            const accessToken = jwt.sign(user, process.env.ACCESS_SECRET_TOKEN, {
+                expiresIn: '1d'
+            });
             res.send({ result, token: accessToken })
         })
 
         app.get("/products", async (req, res) => {
-            const result = await productCollection.find({}).toArray();
+            const result = await (await productCollection.find({}).toArray()).reverse();
             res.send(result);
         });
 
@@ -49,6 +65,18 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await productCollection.findOne(query);
+            res.send(result);
+        });
+
+        app.post('/purchase', async (req, res) => {
+            const purchaseDetails = req.body;
+            const result = await purchaseCollection.insertOne(purchaseDetails);
+            res.send(result);
+        });
+        app.get("/purchase/:email", jwtVerify, async (req, res) => {
+            const email = req.params.email;
+            const query = { email }
+            const result = await purchaseCollection.find(query).toArray();
             res.send(result);
         });
     }
