@@ -43,6 +43,17 @@ async function run() {
         const purchaseCollection = client.db("toolkit").collection("userPurchase");
         const userCollection = client.db("toolkit").collection("users");
         const paidCollection = client.db("toolkit").collection("payment");
+        const reviewCollection = client.db("toolkit").collection("reviews");
+        //  Verify Admin
+        const verifyAdmin = async (req, res, next) => {
+            const requester = req.decode.email;
+            const requesterDetails = await userCollection.findOne({ email: requester });
+            if (requesterDetails.role === "admin") {
+                next()
+            } else {
+                return res.status(403).send({ mesaage: 'Forbidden Access' });
+            }
+        };
         // Payment intent
         app.post("/create-payment-intent", jwtVerify, async (req, res) => {
             const { total } = req.body;
@@ -57,16 +68,6 @@ async function run() {
                 clientSecret: paymentIntent.client_secret,
             });
         });
-        //  Verify Admin
-        const verifyAdmin = async (req, res, next) => {
-            const requester = req.decode.email;
-            const requesterDetails = await userCollection.findOne({ email: requester });
-            if (requesterDetails.role === "admin") {
-                next()
-            } else {
-                return res.status(403).send({ mesaage: 'Forbidden Access' });
-            }
-        }
 
         app.put('/user/:email', async (req, res) => {
             const email = req.params.email;
@@ -83,6 +84,15 @@ async function run() {
             res.send({ result, token: accessToken })
         });
 
+        app.get('/reviews', async (req, res) => {
+            const result = await (await reviewCollection.find().toArray()).reverse();
+            res.send(result);
+        });
+        app.post('/reviews', jwtVerify, async (req, res) => {
+            const doc = req.body;
+            const result = await reviewCollection.insertOne(doc);
+            res.send(result);
+        });
         app.get('/user', jwtVerify, async (req, res) => {
             const result = await userCollection.find().toArray();
             res.send(result);
@@ -108,6 +118,12 @@ async function run() {
 
         app.get("/products", async (req, res) => {
             const result = await (await productCollection.find({}).toArray()).reverse();
+            res.send(result);
+        });
+        // Insert a product by admin
+        app.post("/products", jwtVerify, verifyAdmin, async (req, res) => {
+            const doc = req.body;
+            const result = await productCollection.insertOne(doc);
             res.send(result);
         });
 
