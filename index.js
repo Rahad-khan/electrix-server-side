@@ -144,6 +144,13 @@ async function run() {
             res.send(result);
         });
 
+        app.delete("/products/:id", jwtVerify, verifyAdmin, async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) }
+            const result = await productCollection.deleteOne(filter);
+            res.send(result);
+        });
+
         app.post('/purchase', async (req, res) => {
             const purchaseDetails = req.body;
             const result = await purchaseCollection.insertOne(purchaseDetails);
