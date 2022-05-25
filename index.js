@@ -115,6 +115,16 @@ async function run() {
             const result = await userCollection.updateOne(filter, updateDoc);
             res.send(result);
         });
+        app.put('/updateProfile/:email', jwtVerify, async (req, res) => {
+            const email = req.params.email;
+            const doc = req.body;
+            const filter = { email };
+            const updateDoc = {
+                $set: doc
+            };
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        });
 
         app.get("/products", async (req, res) => {
             const result = await (await productCollection.find({}).toArray()).reverse();
