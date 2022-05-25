@@ -151,6 +151,10 @@ async function run() {
             res.send(result);
         });
 
+        app.get('/purchase', jwtVerify, verifyAdmin, async (req, res) => {
+            const result = await purchaseCollection.find().toArray();
+            res.send(result);
+        });
         app.post('/purchase', async (req, res) => {
             const purchaseDetails = req.body;
             const result = await purchaseCollection.insertOne(purchaseDetails);
@@ -180,11 +184,22 @@ async function run() {
             const filter = { _id: ObjectId(id) };
             const updateDoc = {
                 $set: {
-                    paid: 'paid',
+                    status: 'paid',
                     transactionId: paymentDetails.transactionId
                 },
             };
             const insertToPayment = await paidCollection.insertOne(paymentDetails);
+            const result = await purchaseCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        });
+        app.patch("/shipment/:id", jwtVerify, verifyAdmin, async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    status: 'shipped',
+                },
+            };
             const result = await purchaseCollection.updateOne(filter, updateDoc);
             res.send(result);
         });
