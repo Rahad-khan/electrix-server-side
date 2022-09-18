@@ -8,4 +8,8 @@ router.route('/')
     .get(productController.getAllProducts)
     .post(jwtVerify, verifyAdmin, productController.postProduct);
 
+router.route('/:id')
+    .get(productController.getProductById)
+    .delete(jwtVerify, verifyAdmin, productController.deleteProductById)
+
 module.exports = router;

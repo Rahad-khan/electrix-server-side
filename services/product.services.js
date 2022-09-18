@@ -8,4 +8,14 @@ exports.getAllProductServices = async () => {
 exports.postProductServices = async (data) => {
     const newProduct = await Products.create(data);
     return newProduct;
-}
+};
+
+exports.getProductByIdServices = async (id) => {
+    const product = await Products.findById(id);
+    return product;
+};
+exports.deleteByIdServices = async (id) => {
+    const product = await Products.findByIdAndDelete(id).exec();
+    return product;
+};
+

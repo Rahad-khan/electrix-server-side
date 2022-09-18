@@ -1,20 +1,4 @@
-
-const { getAllProductServices, postProductServices } = require("../services/product.services");
-
-
-//         // Insert a product by admin
-//         app.post("/products", jwtVerify, verifyAdmin, async (req, res) => {
-//             const doc = req.body;
-//             const result = await productCollection.insertOne(doc);
-//             res.send(result);
-//         });
-
-//         app.get("/products/:id", async (req, res) => {
-//             const id = req.params.id;
-//             const query = { _id: ObjectId(id) }
-//             const result = await productCollection.findOne(query);
-//             res.send(result);
-//         });
+const { getAllProductServices, postProductServices, getProductById, deleteByIdServices, getProductByIdServices } = require("../services/product.services");
 
 //         app.delete("/products/:id", jwtVerify, verifyAdmin, async (req, res) => {
 //             const id = req.params.id;
@@ -38,4 +22,23 @@ exports.postProduct = async (req, res, next) => {
     } catch (error) {
         res.status(400).send(error.message);
     }
-}
+};
+
+exports.getProductById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await getProductByIdServices(id);
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+exports.deleteProductById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await deleteByIdServices(id);
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
