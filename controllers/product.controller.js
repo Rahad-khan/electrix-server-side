@@ -1,11 +1,6 @@
 const { getAllProductServices, postProductServices, getProductById, deleteByIdServices, getProductByIdServices } = require("../services/product.services");
 
-//         app.delete("/products/:id", jwtVerify, verifyAdmin, async (req, res) => {
-//             const id = req.params.id;
-//             const filter = { _id: ObjectId(id) }
-//             const result = await productCollection.deleteOne(filter);
-//             res.send(result);
-//         });
+
 exports.getAllProducts = async (req, res, next) => {
     try {
         const result = await getAllProductServices();

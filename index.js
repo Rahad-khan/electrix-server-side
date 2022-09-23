@@ -5,6 +5,7 @@ require("dotenv").config();
 // const port = process.env.PORT || 5000;
 const mongoose = require('mongoose');
 const productRoute = require('./Routers/product.route');
+const userRouter = require('./Routers/user.route');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
@@ -95,31 +96,6 @@ app.use(express.json());
 //             res.send(result);
 //         });
 
-//         app.get("/products", async (req, res) => {
-//             const result = await (await productCollection.find({}).toArray()).reverse();
-//             res.send(result);
-//         });
-//         // Insert a product by admin
-//         app.post("/products", jwtVerify, verifyAdmin, async (req, res) => {
-//             const doc = req.body;
-//             const result = await productCollection.insertOne(doc);
-//             res.send(result);
-//         });
-
-//         app.get("/products/:id", async (req, res) => {
-//             const id = req.params.id;
-//             const query = { _id: ObjectId(id) }
-//             const result = await productCollection.findOne(query);
-//             res.send(result);
-//         });
-
-//         app.delete("/products/:id", jwtVerify, verifyAdmin, async (req, res) => {
-//             const id = req.params.id;
-//             const filter = { _id: ObjectId(id) }
-//             const result = await productCollection.deleteOne(filter);
-//             res.send(result);
-//         });
-
 //         app.get('/purchase', jwtVerify, verifyAdmin, async (req, res) => {
 //             const result = await purchaseCollection.find().toArray();
 //             res.send(result);
@@ -186,12 +162,14 @@ app.use(express.json());
  * Then make an model for schema and pass model name and schema in its function
  * Then create instance from schema as object created from class
  */
-
-app.use("/products", productRoute);
-
 app.get('/', (req, res) => {
     res.send("Manufacturer Tool is Ready")
 });
+
+app.use("/products", productRoute);
+
+app.use('/user', userRouter)
+
 app.post('/product', async (req, res, next) => {
     console.log(req.body);
     try {
