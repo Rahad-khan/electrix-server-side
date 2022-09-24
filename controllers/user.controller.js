@@ -1,4 +1,6 @@
 const userService = require("../services/user.services");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 
 // app.put('/user/:email', async (req, res) => {
@@ -16,24 +18,6 @@ const userService = require("../services/user.services");
 //             res.send({ result, token: accessToken })
 //         });
 
-//         app.get('/user/:email', jwtVerify, async (req, res) => {
-//             const email = req.params.email;
-//             const query = { email };
-//             const result = await userCollection.findOne(query);
-//             res.send(result);
-//         });
-
-//         app.put('/user/admin/:email', jwtVerify, verifyAdmin, async (req, res) => {
-//             const email = req.params.email;
-//             const filter = { email };
-//             const updateDoc = {
-//                 $set: {
-//                     role: `admin`
-//                 },
-//             };
-//             const result = await userCollection.updateOne(filter, updateDoc);
-//             res.send(result);
-//         });
 
 exports.getAllUser = async (req, res, next) => {
     try {
@@ -48,12 +32,37 @@ exports.makeAdmin = async (req, res, next) => {
     try {
         const { email } = req.params;
         const result = await userService.makeAdminServices(email);
-        if (result.modifiedCount) {
-            res.send(result)
-        } else {
-            res.send("something wrong")
-        }
+
+        res.send(result)
+
     } catch (error) {
         res.send("Something Wrong")
     }
 }
+exports.getUserByMail = async (req, res, next) => {
+    try {
+        const { email } = req.params;
+        const result = await userService.userByMailServices(email);
+        if (result) {
+            res.send(result);
+        } else {
+            res.send("User not found")
+        }
+    } catch (error) {
+        res.status(404).send("Not found")
+    }
+};
+exports.createUser = async (req, res, next) => {
+    try {
+        const user = req.body;
+        const { email } = req.params;
+        const result = await userService.createUserService(email, user);
+
+        const accessToken = jwt.sign(user, process.env.ACCESS_SECRET_TOKEN, {
+            expiresIn: '1d'
+        });
+        res.send({ result, token: accessToken });
+    } catch (error) {
+        res.status(404).send("Not found")
+    }
+};

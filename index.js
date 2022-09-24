@@ -39,20 +39,6 @@ app.use(express.json());
 //             });
 //         });
 
-//         app.put('/user/:email', async (req, res) => {
-//             const email = req.params.email;
-//             const user = req.body;
-//             const filter = { email };
-//             const options = { upsert: true };
-//             const updateDoc = {
-//                 $set: user,
-//             };
-//             const result = await userCollection.updateOne(filter, updateDoc, options);
-//             const accessToken = jwt.sign(user, process.env.ACCESS_SECRET_TOKEN, {
-//                 expiresIn: '1d'
-//             });
-//             res.send({ result, token: accessToken })
-//         });
 
 //         app.get('/reviews', async (req, res) => {
 //             const result = await (await reviewCollection.find().toArray()).reverse();
@@ -63,28 +49,7 @@ app.use(express.json());
 //             const result = await reviewCollection.insertOne(doc);
 //             res.send(result);
 //         });
-//         app.get('/user', jwtVerify, async (req, res) => {
-//             const result = await userCollection.find().toArray();
-//             res.send(result);
-//         });
-//         app.get('/user/:email', jwtVerify, async (req, res) => {
-//             const email = req.params.email;
-//             const query = { email };
-//             const result = await userCollection.findOne(query);
-//             res.send(result);
-//         });
 
-//         app.put('/user/admin/:email', jwtVerify, verifyAdmin, async (req, res) => {
-//             const email = req.params.email;
-//             const filter = { email };
-//             const updateDoc = {
-//                 $set: {
-//                     role: `admin`
-//                 },
-//             };
-//             const result = await userCollection.updateOne(filter, updateDoc);
-//             res.send(result);
-//         });
 //         app.put('/updateProfile/:email', jwtVerify, async (req, res) => {
 //             const email = req.params.email;
 //             const doc = req.body;
@@ -171,7 +136,6 @@ app.use("/products", productRoute);
 app.use('/user', userRouter)
 
 app.post('/product', async (req, res, next) => {
-    console.log(req.body);
     try {
         const products = new Products(req.body);
         const result = await products.save();

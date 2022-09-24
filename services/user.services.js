@@ -8,6 +8,13 @@ exports.getUserServices = async () => {
 
 exports.makeAdminServices = async (email) => {
     const updateResult = await User.updateOne({ email: email }, { role: 'admin' });
-    console.log(updateResult);
     return updateResult;
 }
+exports.userByMailServices = async (email) => {
+    const user = await User.findOne({ email });
+    return user;
+};
+exports.createUserService = async (email, data) => {
+    const user = await User.updateOne({ email }, { $set: data }, { upsert: true });
+    return user;
+};

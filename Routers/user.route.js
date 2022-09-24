@@ -11,7 +11,8 @@ router.route('/admin/:email')
 router.route('/')
     .get(jwtVerify, userController.getAllUser);
 
-
-
+router.route('/:email')
+    .get(jwtVerify, userController.getUserByMail)
+    .put(userController.createUser)
 
 module.exports = router;
