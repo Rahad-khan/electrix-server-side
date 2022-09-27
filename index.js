@@ -133,15 +133,8 @@ app.get('/', (req, res) => {
 
 app.use("/products", productRoute);
 
-app.use('/user', userRouter)
+app.use('/user', userRouter);
 
-app.post('/product', async (req, res, next) => {
-    try {
-        const products = new Products(req.body);
-        const result = await products.save();
-        res.status(200).send(result);
-    } catch (error) {
-        res.status(400).send(error.message)
-    }
-})
+// ! next work to be complete review section
+
 module.exports = app;
