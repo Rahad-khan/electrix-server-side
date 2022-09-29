@@ -6,6 +6,7 @@ require("dotenv").config();
 const mongoose = require('mongoose');
 const productRoute = require('./Routers/product.route');
 const userRouter = require('./Routers/user.route');
+const reviewRoute = require('./Routers/review.route')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
@@ -40,15 +41,7 @@ app.use(express.json());
 //         });
 
 
-//         app.get('/reviews', async (req, res) => {
-//             const result = await (await reviewCollection.find().toArray()).reverse();
-//             res.send(result);
-//         });
-//         app.post('/reviews', jwtVerify, async (req, res) => {
-//             const doc = req.body;
-//             const result = await reviewCollection.insertOne(doc);
-//             res.send(result);
-//         });
+
 
 //         app.put('/updateProfile/:email', jwtVerify, async (req, res) => {
 //             const email = req.params.email;
@@ -134,6 +127,8 @@ app.get('/', (req, res) => {
 app.use("/products", productRoute);
 
 app.use('/user', userRouter);
+
+app.use('/reviews', reviewRoute)
 
 // ! next work to be complete review section
 
