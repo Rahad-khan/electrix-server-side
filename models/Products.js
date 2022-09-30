@@ -15,7 +15,7 @@ const productSchema = mongoose.Schema({
     quantity: {
         type: Number,
         required: true,
-        min: [0, "Qauntity can't be negative"]
+        min: [0, "Quantity can't be negative"]
     },
     price: {
         type: Number,
@@ -28,7 +28,7 @@ const productSchema = mongoose.Schema({
         required: [true, "Please Provide a name for the product"],
         trim: true,
         unique: true,
-        minLength: [3, "name must be at least 3 charecter"],
+        minLength: [3, "name must be at least 3 character"],
         maxLength: [100, "Name is too large"],
     },
     description: {
@@ -37,6 +37,11 @@ const productSchema = mongoose.Schema({
     }
 })
 
+/**
+ * Firstly create schema
+ * Then make an model for schema and pass model name and schema in its function
+ * Then create instance from schema as object created from class
+ */
 // Create Model
 // here model function automatically create lowercase and plural collection name to database
 const Products = mongoose.model('Products', productSchema);
