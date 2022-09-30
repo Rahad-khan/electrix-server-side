@@ -6,7 +6,8 @@ require("dotenv").config();
 const mongoose = require('mongoose');
 const productRoute = require('./Routers/product.route');
 const userRouter = require('./Routers/user.route');
-const reviewRoute = require('./Routers/review.route')
+const reviewRoute = require('./Routers/review.route');
+const purchaseRoute = require('./Routers/purchase.route');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
@@ -19,11 +20,8 @@ app.use(express.json());
 // async function run() {
 //     try {
 //         await client.connect();
-//         const productCollection = client.db("toolkit").collection("products");
 //         const purchaseCollection = client.db("toolkit").collection("userPurchase");
-//         const userCollection = client.db("toolkit").collection("users");
 //         const paidCollection = client.db("toolkit").collection("payment");
-//         const reviewCollection = client.db("toolkit").collection("reviews");
 //         
 //         // Payment intent
 //         app.post("/create-payment-intent", jwtVerify, async (req, res) => {
@@ -54,27 +52,7 @@ app.use(express.json());
 //             res.send(result);
 //         });
 
-//         app.get('/purchase', jwtVerify, verifyAdmin, async (req, res) => {
-//             const result = await purchaseCollection.find().toArray();
-//             res.send(result);
-//         });
-//         app.post('/purchase', async (req, res) => {
-//             const purchaseDetails = req.body;
-//             const result = await purchaseCollection.insertOne(purchaseDetails);
-//             res.send(result);
-//         });
-//         app.get("/purchase/:email", jwtVerify, async (req, res) => {
-//             const email = req.params.email;
-//             const query = { email }
-//             const result = await purchaseCollection.find(query).toArray();
-//             res.send(result);
-//         });
-//         app.delete("/purchase/:id", jwtVerify, async (req, res) => {
-//             const id = req.params.id;
-//             const filter = { _id: ObjectId(id) }
-//             const result = await purchaseCollection.deleteOne(filter);
-//             res.send(result);
-//         });
+
 //         app.get("/payment/:id", jwtVerify, async (req, res) => {
 //             const id = req.params.id;
 //             const query = { _id: ObjectId(id) }
@@ -128,8 +106,10 @@ app.use("/products", productRoute);
 
 app.use('/user', userRouter);
 
-app.use('/reviews', reviewRoute)
+app.use('/reviews', reviewRoute);
 
-// ! next work to be complete review section
+app.use('/purchase', purchaseRoute)
+
+// ! next work to be complete purchase section
 
 module.exports = app;

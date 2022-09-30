@@ -15,7 +15,7 @@ exports.getProductByIdServices = async (id) => {
     return product;
 };
 exports.deleteByIdServices = async (id) => {
-    const product = await Products.findByIdAndDelete(id).exec();
+    const product = await Products.deleteOne({ _id: id });
     return product;
 };
 
