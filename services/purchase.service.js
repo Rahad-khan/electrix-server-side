@@ -16,4 +16,8 @@ exports.deletePurByIdServices = async (id) => {
     const result = await Purchase.deleteOne({ _id: id });
     return result;
 };
+exports.updatePurByIdServices = async (id) => {
+    const result = await Purchase.updateOne({ _id: id }, { $set: { status: 'shipped' } });
+    return result;
+};
 

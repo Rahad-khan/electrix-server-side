@@ -35,4 +35,13 @@ exports.deletePurchase = async (req, res, next) => {
         res.send((error.message))
     }
 };
+exports.shipmentPurchase = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await purchaseService.updatePurByIdServices(id);
+        res.send(result);
+    } catch (error) {
+        res.send((error.message))
+    }
+};
 

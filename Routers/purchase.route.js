@@ -5,6 +5,8 @@ const verifyAdmin = require('../utils/verifyAdmin');
 
 const router = Router();
 
+router.patch('/shipment/:id', jwtVerify, verifyAdmin, purchaseController.shipmentPurchase)
+
 router.route('/')
     .get(jwtVerify, verifyAdmin, purchaseController.getPurchase)
     .post(purchaseController.postPurchase);
