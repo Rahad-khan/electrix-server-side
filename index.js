@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 require("dotenv").config();
-// const port = process.env.PORT || 5000;
 const mongoose = require('mongoose');
 const productRoute = require('./Routers/product.route');
 const userRouter = require('./Routers/user.route');
@@ -47,7 +46,5 @@ app.use('/reviews', reviewRoute);
 app.use('/purchase', purchaseRoute);
 
 app.use('/payment', paymentRoute)
-
-// ! next work to be complete purchase section
 
 module.exports = app;

@@ -5,7 +5,8 @@ exports.getPurchaseService = async () => {
     return purchases;
 };
 exports.postPurchaseService = async (data) => {
-    const result = await Purchase.create(data);
+    const result = await Purchase.create(data)
+    console.log(result);
     return result;
 };
 exports.findPurByEmailServices = async (email) => {
