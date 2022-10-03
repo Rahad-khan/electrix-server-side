@@ -9,6 +9,7 @@ const reviewRoute = require('./Routers/review.route');
 const purchaseRoute = require('./Routers/purchase.route');
 const paymentRoute = require('./Routers/payment.route');
 const jwtVerify = require('./utils/jwtVerify');
+const updateRoute = require('./Routers/Update.route');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
@@ -37,6 +38,8 @@ app.get('/', (req, res) => {
     res.send("Manufacturer Tool is Ready")
 });
 
+app.use('/updateProfile', jwtVerify, updateRoute)
+
 app.use("/products", productRoute);
 
 app.use('/user', userRouter);
@@ -45,6 +48,7 @@ app.use('/reviews', reviewRoute);
 
 app.use('/purchase', purchaseRoute);
 
-app.use('/payment', paymentRoute)
+app.use('/payment', paymentRoute);
+
 
 module.exports = app;
